@@ -31,14 +31,15 @@ class Play extends Phaser.Scene {
 
         //add walls
         let wallA = this.physics.add.sprite(0, height / 4, 'wall');
-        wallA.setX(Phaser.Math.Between(0 + wallA.width / 2, width - wallA.width / 2));
+        wallA.setX(Phaser.Math.Between(wallA.width / 2, width - wallA.width / 2));
         wallA.setImmovable(true);
 
-        let wallB = this.physics.add.sprite(0, height / 2, 'wall');
-        wallB.setX(Phaser.Math.Between(wallB.width / 2, width - wallB.width / 2));
-        wallB.body.setCollideWorldBounds(true);
-
-        this.walls = this.add.group([wallA, wallB]);
+        this.wallB = this.physics.add.sprite(0, height / 2, 'wall');
+        this.wallB.setX(Phaser.Math.Between(this.wallB.width / 2, width - this.wallB.width / 2));
+        this.wallB.setImmovable(true);
+        this.wallB.setVelocityX(100);
+        
+        this.walls = this.add.group([wallA, this.wallB]);
 
         // one way
         this.oneWay =  this.physics.add.sprite(0 , height / 4 * 3, 'oneway');
@@ -71,8 +72,21 @@ class Play extends Phaser.Scene {
 
         this.physics.add.collider(this.ball, this.walls);
         this.physics.add.collider(this.ball, this.oneWay);
+
+
     }
 
     update() {
+        this.wallBounce(this.wallB);
+    }
+    
+    wallBounce(wall) {
+        if (wall.x >= (width - (wall.width / 2))) {
+            console.log('yes')
+            wall.setVelocityX(-100);
+        } else if(wall.x <= wall.width / 2) {
+            console.log('yes')
+            wall.setVelocityX(100)
+        }
     }
 }
